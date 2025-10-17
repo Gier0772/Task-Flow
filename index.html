@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskFlow - Gestión de Tareas Empresariales</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login-overlay">
+    <div id="login-container">
+      <div class="login-box">
+        <div class="login-logo">
+          <img src="TaskFlow2-sin-fondo.png" alt="Logo TaskFlow" class="logo">
+          <div class="logo-text">TaskFlow</div>
+        </div>
+        <form id="loginForm">
+          <input type="text" id="loginUser" placeholder="Usuario" required>
+          <input type="password" id="loginPass" placeholder="Contraseña" required>
+          <button type="submit">Ingresar</button>
+        </form>
+        <p id="loginError" class="login-error"></p>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="TaskFlow2-sin-fondo.png" alt="Logo TaskFlow" class="logo">
+        <div class="logo-text">TaskFlow</div>
+      </div>
+      <nav class="sidebar-menu">
+        <button class="menu-item active" data-section="dashboard-section">Dashboard</button>
+        <button class="menu-item" data-section="tareas-section">Tareas</button>
+        <button class="menu-item" data-section="empleados-section">Empleados</button>
+        <button class="menu-item" data-section="reportes-section">Reportes</button>
+        <button class="menu-item" data-section="micuenta-section">Mi cuenta</button>
+      </nav>
+      <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+    </aside>
+    <main class="dashboard-content">
+      <section id="dashboard-section" class="dashboard-panel" style="display:block;">
+        <header class="header">
+          <div class="header-title">Bienvenido a TaskFlow</div>
+        </header>
+        <p>¡Gestiona tus tareas, empleados y reportes desde un solo lugar!</p>
+        <img src="TaskFlow2-sin-fondo.png" alt="Logo TaskFlow" style="width:120px;margin:2em 0;">
+      </section>
+      <section id="tareas-section" class="dashboard-panel" style="display:none;">
+        <h2>Tareas</h2>
+        <section class="registro-tarea">
+          <h3>Crear nueva tarea</h3>
+          <form id="formTarea">
+            <input type="text" id="titulo" placeholder="Título de la tarea" required>
+            <textarea id="descripcion" placeholder="Descripción de la tarea" required></textarea>
+            <input type="text" id="responsable" placeholder="Responsable o empleado" required>
+            <input type="date" id="fecha" required>
+            <select id="prioridad" required>
+              <option value="">Prioridad</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+            <button type="submit">Agregar</button>
+          </form>
+        </section>
+        <section class="filtros">
+          <h3>Filtrar tareas</h3>
+          <button class="filtro-btn" data-estado="todas">Todas</button>
+          <button class="filtro-btn" data-estado="Pendiente">Pendiente</button>
+          <button class="filtro-btn" data-estado="Progreso">En Progreso</button>
+          <button class="filtro-btn" data-estado="Completada">Completada</button>
+        </section>
+        <section class="listado-tareas">
+          <h3>Listado de tareas</h3>
+          <ul id="listaTareas"></ul>
+          <p id="noTareas" style="display:none;color:#888;">No hay tareas registradas.</p>
+        </section>
+      </section>
+      <section id="empleados-section" class="dashboard-panel" style="display:none;">
+        <h2>Empleados</h2>
+        <form id="formEmpleado" style="display:flex;gap:1em;flex-wrap:wrap;">
+          <input type="text" id="nombreEmpleado" placeholder="Nombre" required>
+          <input type="text" id="cargoEmpleado" placeholder="Cargo" required>
+          <input type="email" id="emailEmpleado" placeholder="Email" required>
+          <button type="submit">Agregar</button>
+        </form>
+        <table class="tabla-empleados">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cargo</th>
+              <th>Email</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="listaEmpleados"></tbody>
+        </table>
+        <p id="noEmpleados" style="color:#888;display:none;">No hay empleados registrados.</p>
+      </section>
+      <section id="reportes-section" class="dashboard-panel" style="display:none;">
+        <h2>Reportes</h2>
+        <h3>Resumen de tareas</h3>
+        <button id="btnExportarExcel" style="margin-bottom:1em;">Exportar tareas a Excel</button>
+        <table class="tabla-reportes">
+          <thead>
+            <tr>
+              <th>Total</th>
+              <th>Pendientes</th>
+              <th>En Progreso</th>
+              <th>Completadas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="reporteTotal"></td>
+              <td id="reportePendiente"></td>
+              <td id="reporteProgreso"></td>
+              <td id="reporteCompletada"></td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>Empleados registrados</h3>
+        <table class="tabla-reportes">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cargo</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody id="empleadosReporte"></tbody>
+        </table>
+      </section>
+      <section id="micuenta-section" class="dashboard-panel" style="display:none;">
+        <h2>Mi Cuenta</h2>
+        
+        <div class="perfil-card">
+          <div class="perfil-header">
+            <div class="avatar" id="userAvatar">A</div>
+            <div class="perfil-info">
+              <h3 id="miUsuarioNombre">Administrador</h3>
+              <p>Sistema TaskFlow</p>
+            </div>
+          </div>
+          
+          <div class="info-usuario">
+            <p><strong>Usuario:</strong> <span id="miUsuario"></span></p>
+            <p><strong>Rol:</strong> <span id="miRol">Administrador</span></p>
+            <p><strong>Último acceso:</strong> <span id="ultimoAcceso">Hoy</span></p>
+          </div>
+        </div>
+
+        <div class="form-cambiar-clave">
+          <h3 style="margin-top: 0; margin-bottom: 1rem;">Cambiar Contraseña</h3>
+          <form id="formCambiarClave">
+            <div class="form-group">
+              <label for="claveActual">Contraseña Actual</label>
+              <input type="password" id="claveActual" placeholder="Ingresa tu contraseña actual" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="claveNueva">Nueva Contraseña</label>
+              <input type="password" id="claveNueva" placeholder="Ingresa tu nueva contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn-cambiar-clave">Cambiar Contraseña</button>
+          </form>
+          <div id="cambioClaveMsg"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>
+    <span>&copy; 2025 TaskFlow</span>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
